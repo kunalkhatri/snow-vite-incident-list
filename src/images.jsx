@@ -1,4 +1,4 @@
-const instance = import.meta.env.VITE_TEST_INSTANCE;
+const instance = import.meta.env.VITE_INSTANCE;
 const images = {
     vite : `${instance}/vite.svg`,
     react : `${instance}/react.svg`,

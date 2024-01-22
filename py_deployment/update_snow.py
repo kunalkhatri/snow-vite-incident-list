@@ -60,7 +60,8 @@ else:
 
 # updating ui page
 
-# we would first update our index template to make sure it containes 
+# we would first update our index template to make sure it contains timestanp at end of js and css imports
+# doing this, borwser should not load cached version of js and css once they are updated
 
 def enhance_string(original, to_find, enhancement):
     index = original.find(to_find)
@@ -88,6 +89,6 @@ ui_page_updation = requests.patch(f"{instance}/api/now/table/sys_ui_page/{UI_PAG
                              )
 
 if(ui_page_updation.status_code == 200):
-    print("JS Updated successfully")
+    print("UI Page Updated successfully")
 else:
-    print(f"JS Updation failed with {ui_page_updation.status_code}")
+    print(f"UI Page Updation failed with {ui_page_updation.status_code}")

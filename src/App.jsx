@@ -1,32 +1,43 @@
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import images from './images.jsx'
 import './App.css'
+import axios_wrapper from './axios_wrapper.jsx'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [incidents,setIncidents] = useState([]);
+
+
+  let rows = 10;
+  let offset = 0;
+
+  useEffect(()=>{
+    axios_wrapper({
+      url:"https://dev175973.service-now.com/api/now/table/incident"
+    }).then(response=>{
+      console.log("Authenticated",response);
+      if (response.data.result){
+        setIncidents(response.data.result);
+      }
+    }).catch(error=>{
+      console.log("Error",error)
+    });
+  },
+  [rows,offset])
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={images.vite} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={images.react} className="logo react" alt="React logo" />
-        </a>
+        {incidents.map(incident=>
+          <div key={incident.sys_id}>{incident.sys_id} ooga booga</div>
+        )}
+
+        {
+          (!incidents  || incidents.length < 1) &&
+            <div>No Data</div>
+        }
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+
       <p>
         {import.meta.env.MODE}
       </p>
