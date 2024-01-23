@@ -44,7 +44,7 @@ if (css_updation.status_code == 200):
 else:
     print(f"CSS Updation failed with {css_updation.status_code}")
 
-#js_updation 
+# JS updation 
 js_updation = requests.patch(f"{instance}/api/now/table/sys_ui_script/{UI_SCRIPT_SYS_ID}",
                              data = json.dumps({
                                  "script":JS_FILE_CONTENT
