@@ -2,7 +2,7 @@ import axios from "axios"
 const instance = import.meta.env.VITE_INSTANCE;
 const auth_mode = import.meta.env.VITE_AUTHENTICATON;
 let request;
-console.log(typeof auth_mode, auth_mode);
+
 
 if (auth_mode=="basic"){
     console.log("BASIIC");
