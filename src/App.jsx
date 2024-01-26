@@ -7,7 +7,8 @@ import { FaHandSparkles,FaExternalLinkAlt } from "react-icons/fa";
 import { DataGrid } from '@mui/x-data-grid';
 import Snackbar from '@mui/material/Snackbar';
 import Button from '@mui/material/Button';
-
+import Alert from '@mui/material/Alert';
+import { FaHourglassHalf } from "react-icons/fa";
 
 
 const instance = import.meta.env.VITE_INSTANCE;
@@ -26,10 +27,6 @@ function App() {
       field:'short_description',
       editable:true,
       flex:2,
-      // valueSetter:params=>{
-      //   console.log("params",params);
-      //   return params.value;
-      // }
     },
     {
       headerName:"Active",
@@ -114,6 +111,11 @@ function App() {
 
   return (
     <>
+    {rows.length==0 && (
+      <Alert icon={<FaHourglassHalf fontSize="inherit" />} severity="success">
+        Please wait while we load the data...
+      </Alert>
+    )}
       <DataGrid 
         rows={rows}
         columns={colDef}
@@ -127,6 +129,7 @@ function App() {
         loading={is_data_loading}
         processRowUpdate={handleRowUpdate}
         onProcessRowUpdateError={handleProcessError}
+        style={{minHeight:500}}
       />
       {import.meta.env.MODE == "development" &&
         <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-rose-50 dark:bg-gray-800 dark:text-red-400 border border-solid  border-rose-500 flex gap-2 max-w-fit mx-auto mt-5" role="alert">
@@ -135,7 +138,7 @@ function App() {
       }
 
       <Snackbar
-        anchorOrigin={{horizontal:'right',vertical:'top'}} 
+        anchorOrigin={{horizontal:'right',vertical:'bottom'}} 
         open={snack_details.visible}
         message={snack_details.message}
         autoHideDuration={5000}
