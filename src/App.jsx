@@ -2,10 +2,11 @@ import { useState,useEffect,useMemo } from 'react'
 import './App.css'
 import axios_wrapper from './axios_wrapper.jsx'
 
-import { FaHandSparkles } from "react-icons/fa";
+import { FaHandSparkles,FaExternalLinkAlt } from "react-icons/fa";
 
 import { DataGrid } from '@mui/x-data-grid';
 import Snackbar from '@mui/material/Snackbar';
+import Button from '@mui/material/Button';
 
 
 
@@ -44,8 +45,18 @@ function App() {
     {
       headerName:"Caller id",
       field:'caller_id',
-      valueGetter:(params)=>params.row?.caller_id?.value ,
+      valueGetter:(params)=>params.row?.caller_id?.display_value ,
       flex:1
+    },
+    {
+      headerName:"Link",
+      field:'link',
+      flex:0,
+      renderCell:(params)=>(
+        <Button variant="contained" onClick={()=>{window.open(`${instance}/incident.do?sys_id=${params.row.sys_id}`)}} endIcon={<FaExternalLinkAlt  />} >
+          Link
+        </Button>
+      )
     },
     
   ]
@@ -63,7 +74,7 @@ function App() {
   useEffect(()=>{
     set_loading(true);
     axios_wrapper({
-      url:`${instance}/api/now/table/incident?sysparm_limit=25&sysparm_query=ORDERBYnumber`
+      url:`${instance}/api/now/table/incident?sysparm_limit=25&sysparm_query=ORDERBYnumber&sysparm_display_value=true`
     }).then(response=>{
       console.log("Authenticated",response);
       if (response.data.result){
@@ -88,10 +99,10 @@ function App() {
     }).then(response=>{
       set_snack_details({
         visible:true,
-        message:"Short description successfully updated on SNOW"
+        message:"Short description successfully updated."
       });
       setTimeout(()=>{
-        set_snack_details({visible:false,message:"Placeholder"});
+        set_snack_details({visible:false,message: snack_details.message });
       },3000);
       set_loading(false);
       
