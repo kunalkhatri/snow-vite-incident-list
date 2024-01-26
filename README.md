@@ -10,12 +10,11 @@ Steps to start with this Repo
     Fill in the necessary details i.e. instance [ e.g. httsp://dev001.service-now.com], admin username and password
 
   2. sample.env.production -> env.production
+
     No changes required
 
 3. Edit deploy_snow.js
-    Replace target_record_sys_id with your Scripted Rest end point resource sys_id
-
-    This is the place where JS and CSS are uploaded
+    Replace target_record_sys_id with your Scripted Rest end point resource sys_id. This is where JS and CSS are uploaded as attachment.
 
 
 ### Voila your development environment is now setup
