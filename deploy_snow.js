@@ -23,116 +23,65 @@ const instance = process.env.VITE_INSTANCE;
 const username = process.env.VITE_AUTH_USERNAME;
 const password = process.env.VITE_AUTH_PASSWORD;
 
-const UI_PAGE_SYS_ID = "74e6c7ea97333110c7ffbed0f053af59"
-let UI_PAGE_NAME;
-const UI_SCRIPT_SYS_ID = "84b20f6297333110c7ffbed0f053afb2"
-const STYLE_SHEET_SYS_ID = "e7f587aa97333110c7ffbed0f053afea"
 
-// let's update the sys-ui-script aka js include file first
+const target_record_sys_id = "9ecf4d0c97408610c7ffbed0f053afc7"
+const target_table = "sys_ws_operation"
 
-fs.readFile(findFirstFile(process.cwd() + "/dist/assets/", ".js"), "utf-8", (err, data) => {
+let js_filename = `js_chunk_${Date.now()}.js`;
+let css_filename = `css_file_${Date.now()}.css`;
+
+
+// let's upload css include file first
+
+fs.readFile(findFirstFile(process.cwd() + "/dist/assets/", ".css"), "utf-8", (err, data) => {
     axios({
-        method: "patch",
-        url: `${instance}/api/now/table/sys_ui_script/${UI_SCRIPT_SYS_ID}`,
+        method:"POST",
+        url:`${instance}/api/now/v1/attachment/file?table_name=${target_table}&table_sys_id=${target_record_sys_id}&file_name=${css_filename}`,
         auth: {
             username: username,
             password: password
         },
-        data: {
-            script: data
+        headers:{
+            "Content-Type":"text/plain",
+            "Accept":"application/json"
+        },
+        data:data
+    }).then(response=>{
+        if (response.status>199 && response.status < 300  ) {
+            console.log("CSS File uploaded successfully");
         }
-    }
-    ).then(response => {
-        console.log("UI Script was updated.");
+        else {
+            console.log("CSS Upload failed with status code " + response.status);
+        }
     }).catch(err => {
         console.log("API call to snow failed with : ", err);
     });
-    if (err) {
-        console.log("UI Script couldn't be read. ");
-    }
-})
+});
 
 
-// now it's css file
+// let's upload js file second
 
-fs.readFile(findFirstFile(process.cwd() + "/dist/assets/", ".css"), "utf-8",
-    (err, data) => {
-        axios({
-            method: "patch",
-            url: `${instance}/api/now/table/content_css/${STYLE_SHEET_SYS_ID}`,
-            auth: {
-                username: username,
-                password: password
-            },
-            data: {
-                style: data
-            }
+fs.readFile(findFirstFile(process.cwd() + "/dist/assets/", ".js"), "utf-8", (err, data) => {
+    axios({
+        method:"POST",
+        url:`${instance}/api/now/v1/attachment/file?table_name=${target_table}&table_sys_id=${target_record_sys_id}&file_name=${js_filename}`,
+        auth: {
+            username: username,
+            password: password
+        },
+        headers:{
+            "Content-Type":"text/plain",
+            "Accept":"application/json"
+        },
+        data:data
+    }).then(response=>{
+        if (response.status > 199 && response.status < 300  ) {
+            console.log("JS File uploaded successfully");
         }
-        ).then(response => {
-            console.log("CSS was updated.");
-        }).catch(err => {
-            console.log("API call to snow failed with : ", err);
-        });
-        if (err) {
-            console.log("CSS file couldn't be read. ");
+        else {
+            console.log("JS Upload failed with status code " + response.status);
         }
-    }
-)
-
-// finally HTML Page
-// we need to modify css and js include URLs
-
-axios({
-    url: `${instance}/api/now/table/sys_ui_script/${UI_SCRIPT_SYS_ID}`,
-    auth: {
-        username: username,
-        password: password
-    }
-}).then(get_response=>{
-        UI_PAGE_NAME = get_response.data.result.name;
-        let html_template = `<?xml version="1.0" encoding="utf-8" ?>
-<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
-
-<g:evaluate object="true">
-    var session = gs.getSession();
-    var token = session.getSessionToken();
-    if (token=='' || token==undefined){
-        token = gs.getSessionToken();
-    }
-</g:evaluate>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ViteReact testing for ServiceNow</title>
-    <script type="module"  src="/${UI_PAGE_NAME}.jsdbx?updated_${Date.now()}"></script>
-    <link rel="stylesheet"  href="${STYLE_SHEET_SYS_ID}.cssdbx?updated_${Date.now()}" />
-</head>
-<body>
-    <div id="root"></div>
-</body>
-<script>
-    window.servicenowUserToken="$[token]";
-</script>
-
-</html>
-
-</j:jelly>`;
-        axios({
-            method:"patch",
-            url:`${instance}/api/now/table/sys_ui_page/${UI_PAGE_SYS_ID}`,
-            auth:{
-                username:username,
-                password:password
-            },
-            data:{
-                html:html_template
-            }
-        }
-        ).then(response=>{
-            console.log("UI Page was updated.");
-        }).catch(err=>{
-            console.log("UI PAGE API call to snow failed with : ",err );
-        });
-    })
+    }).catch(err => {
+        console.log("API call to snow failed with : ", err);
+    });
+});
