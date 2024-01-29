@@ -3,33 +3,6 @@
 This is a simple experiment where we develop an UI page in React + Vite.
 Steps to start with this Repo
 
-1. Clone the repo
-2. Rename two environment files
-  1. sample.env -> .env
-
-    Fill in the necessary details i.e. instance [ e.g. httsp://dev001.service-now.com], admin username and password
-
-  2. sample.env.production -> env.production
-
-    No changes required
-
-3. Edit deploy_snow.js
-    Replace target_record_sys_id with your Scripted Rest end point resource sys_id. This is where JS and CSS are uploaded as attachment.
-
-
-### Voila your development environment is now setup
-
-#### Command to build the deployment resources
-```javascript
-npm run build
-```
-
-#### Once built, deploy
-```javascript
-npm run deploy
-```
-
-
 ### ServiceNow instance
 
 1. Create a new app on servicenow
@@ -41,7 +14,7 @@ npm run deploy
       - Save the record once to obtain current record's sys_id. We will need it in the next step
       - Script : 
         ``` 
-        	function getRecentAttachmentWithSubstring(recordSysId, searchString) {
+        function getRecentAttachmentWithSubstring(recordSysId, searchString) {
             var gr = new GlideRecord('sys_attachment');
             gr.addQuery('table_sys_id', recordSysId);
             gr.addQuery('file_name', 'CONTAINS', searchString);
@@ -78,46 +51,46 @@ npm run deploy
       - Copy the `Resource Path`, we will need it for UI Page in step 3
 
 3. Create a new UI Page
-  - Check the option `Direct` : We don't want any styling or js include from ServiceNow as that might interfere with our code
-  - HTML : 
-    ```
-    <?xml version="1.0" encoding="utf-8" ?>
-    <j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+    - Check the option `Direct` : We don't want any styling or js include from ServiceNow as that might interfere with our code
+    - HTML : 
+      ```
+      <?xml version="1.0" encoding="utf-8" ?>
+      <j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
 
-    <g:evaluate object="true">
-        var session = gs.getSession();
-        var token = session.getSessionToken();
-        if (token=='' || token==undefined){
-            token = gs.getSessionToken();
-        }
-    </g:evaluate>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>ViteReact testing for ServiceNow</title>
-        <!-- replace links in following two lines to Resouce Path we acquired in step 2 replacing the {file} with js and css respectively-->
-        
-        <script type="module"  src="/api/x_904640_react_inc/js_css_includes/js"></script>
-        <link rel="stylesheet"  href="/api/x_904640_react_inc/js_css_includes/css" />
-    </head>
-    <body>
-        <div id="root">
-        Loading ....
-      </div>
-    </body>
-    <script>
-        window.servicenowUserToken="$[token]";
-    </script>
+      <g:evaluate object="true">
+          var session = gs.getSession();
+          var token = session.getSessionToken();
+          if (token=='' || token==undefined){
+              token = gs.getSessionToken();
+          }
+      </g:evaluate>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8" />
+          <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <title>ViteReact testing for ServiceNow</title>
+          <!-- replace links in following two lines to Resouce Path we acquired in step 2 replacing the {file} with js and css respectively-->
+          
+          <script type="module"  src="/api/x_904640_react_inc/js_css_includes/js"></script>
+          <link rel="stylesheet"  href="/api/x_904640_react_inc/js_css_includes/css" />
+      </head>
+      <body>
+          <div id="root">
+          Loading ....
+        </div>
+      </body>
+      <script>
+          window.servicenowUserToken="$[token]";
+      </script>
 
-    </html>
+      </html>
 
-    </j:jelly>
-    ```
+      </j:jelly>
+      ```
 4. Create CORS Rule [ System Web Services -> REST -> CORS Rules]
-  - Check all HTTP Methods
-  - Domain will be the domain you use for local development. In my case it is `http://localhost:5173`. It is the address VITE runs your development server after you run `npm run dev`
+    - Check all HTTP Methods
+    - Domain will be the domain you use for local development. In my case it is `http://localhost:5173`. It is the address VITE runs your development server after you run `npm run dev`
 
 
 
@@ -129,6 +102,7 @@ npm run deploy
         - username
         - password
         - instance url [ e.g. https://dev10011.service-now.com ]
+        - sys_ws_operation_sys_id to sys_id of Resource created in step 2(d) in ServiceNow section
     2. sample.env.production, change it to env.production
         No need to modify anything in this file. You can leave it as such.
 

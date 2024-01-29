@@ -22,9 +22,8 @@ function findFirstFile(folderPath,extension='.js') {
 const instance = process.env.VITE_INSTANCE;
 const username = process.env.VITE_AUTH_USERNAME;
 const password = process.env.VITE_AUTH_PASSWORD;
+const target_record_sys_id = process.env.SYS_WS_OPERATION_SYS_ID;
 
-// replace this with your scripted rest end point sys_id
-const target_record_sys_id = "2d2e894583084210f8bd9796feaad3b6"
 const target_table = "sys_ws_operation"
 
 let js_filename = `js_chunk_${Date.now()}.js`;
