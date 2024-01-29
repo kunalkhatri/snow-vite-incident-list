@@ -111,6 +111,7 @@ function App() {
 
   return (
     <>
+    <h1>React Incidents List</h1>
     {rows.length==0 && (
       <Alert icon={<FaHourglassHalf fontSize="inherit" />} severity="success">
         Please wait while we load the data...

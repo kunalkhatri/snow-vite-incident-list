@@ -24,7 +24,7 @@ const username = process.env.VITE_AUTH_USERNAME;
 const password = process.env.VITE_AUTH_PASSWORD;
 
 // replace this with your scripted rest end point sys_id
-const target_record_sys_id = "9ecf4d0c97408610c7ffbed0f053afc7"
+const target_record_sys_id = "2d2e894583084210f8bd9796feaad3b6"
 const target_table = "sys_ws_operation"
 
 let js_filename = `js_chunk_${Date.now()}.js`;
