@@ -7,7 +7,9 @@ Steps to start with this Repo
 
 1. Create a new app on servicenow
 2. Create new `Scripted REST API`
+
     a. Create a new `Query Parameter`. Put in Queyr Parameter name as `file`. Associate with parent API definition create in step (2)
+
     b. Additionally create a new 'Resource' in newly created `Scripted REST API`
       - HTTP Method - Get
       - Relative path `/{file}`
